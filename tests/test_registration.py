@@ -48,9 +48,23 @@ def test_add_existing_user(setup_database):
     response = add_user('existinguser', 'existinguser2@example.com', 'password1234') 
     assert not response, "Пользователь с существующим логином не должен сохраняться."
 
+def test_authenticate_invalid_user(setup_database):
+    """Тест аутентификации несуществующего пользователя."""
+    assert authenticate_user('ghostuser', 'nope') == False
+
+def test_authenticate_wrong_password(setup_database):
+    """Тест аутентификации с неправильным паролем."""
+    add_user('wrongpass', 'wrong@example.com', 'correctpass')
+    assert authenticate_user('wrongpass', 'wrongpass') == False
+
+def test_display_users(capsys, setup_database):
+    """Тест отображения списка пользователей."""
+    add_user('showuser', 'show@example.com', 'showpass')
+    display_users()
+    captured = capsys.readouterr()
+    assert 'showuser' in captured.out
 """
-Тест добавления пользователя с существующим логином.
-Тест успешной аутентификации пользователя.
+
 Тест аутентификации несуществующего пользователя.
 Тест аутентификации пользователя с неправильным паролем.
 Тест отображения списка пользователей.
