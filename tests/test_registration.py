@@ -42,6 +42,12 @@ def test_authenticate_valid_user(setup_database):
     add_user('authuser', 'auth@example.com', 'secret')
     assert authenticate_user('authuser', 'secret') == True
 
+def test_add_existing_user(setup_database):
+    """Тест попытки добавления пользователя с существующим логином."""
+    add_user('existinguser', 'existinguser@example.com', 'password123')
+    response = add_user('existinguser', 'existinguser2@example.com', 'password1234') 
+    assert not response, "Пользователь с существующим логином не должен сохраняться."
+
 """
 Тест добавления пользователя с существующим логином.
 Тест успешной аутентификации пользователя.
